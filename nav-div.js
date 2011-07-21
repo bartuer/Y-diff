@@ -1,8 +1,5 @@
 window['$']=function(a){return document.getElementById(a)};
 
-/////////////////////// debug flag ////////////////////////
-var debug = false;
-
 
 /////////////////////// adjustable parameters //////////////////
 var minStep = 10;
@@ -43,7 +40,7 @@ function sign(x) {
 }
 
 function elementPosition(id) {
-  obj = document.getElementById(id);
+  obj = $(id);
   var curleft = 0,
     curtop = 0;
 
@@ -105,8 +102,8 @@ function getContainer(elm) {
 function matchWindow(linkId, targetId, n) {
   moving = true;
 
-  var link = document.getElementById(linkId);
-  var target = document.getElementById(targetId);
+  var link = $(linkId);
+  var target = $(targetId);
   var linkContainer = getContainer(link);
   var targetContainer = getContainer(target);
 
@@ -150,7 +147,7 @@ function matchWindow(linkId, targetId, n) {
 var highlighted = [];
 
 function putHighlight(id, color) {
-  var elm = document.getElementById(id);
+  var elm = $(id);
   if (elm !== null) {
     elm.style.backgroundColor = color;
     if (color !== bgColor) {
@@ -225,13 +222,18 @@ function m(e) {
   } else if (typeof e === 'object') {
     if (e['i']) {
       var n = document.createElement('a');
-      n.setAttribute('tid', e['i']);
-      n.setAttribute('class', c[e['c']]);
-      n.setAttribute('id', e['i'] + 1);
-      n.setAttribute('title', tip[e['c']]);
+      var o = {
+        'tid':e['i'],
+        'id':e['i']+this['m'],
+        'class':c[e['c']],
+        'title':tip[e['c']]
+      };
+      for (var p in o) {
+        n.setAttribute(p, o[p]);
+      }
       n.innerHTML = e['s'];
       this.appendChild(n);
-      n.onclick = function (e) {
+      n.onmouseover = function (e) {
         var t = getTarget(e);
         var lid = t.id;
         var tid = t.getAttribute('tid');
@@ -252,7 +254,9 @@ function m(e) {
 
 window.onload = function (e) {
   var o = JSON.parse($('data').innerText);
+  $('leftstart').parentNode['m'] = -1;
   o.left.forEach(m, $('leftstart').parentNode);
+  $('rightstart').parentNode['m'] = 1;
   o.right.forEach(m, $('rightstart').parentNode);
   [$('left'), $('right')].forEach(function (e) {
     e.onscroll = function (e) {
