@@ -1,3 +1,6 @@
+include('lib.ajax.js');
+window.$=function(a){return document.getElementById(a)};
+
 /////////////////////// debug flag ////////////////////////
 var debug = false;
 
@@ -28,7 +31,6 @@ var cTimeout;
 
 
 ///////////////////////// utilities ///////////////////////
-
 // No Math.sign() in JS?
 
 function sign(x) {
@@ -158,7 +160,6 @@ function matchWindow(linkId, targetId, n) {
 
 
 ////////////////////////// highlighting /////////////////////////////
-
 var highlighted = [];
 
 function putHighlight(id, color) {
@@ -230,29 +231,53 @@ function getTarget(x) {
   return x.target || x.srcElement;
 }
 
+var c = ["deletion", "insertion", "change", "move", "move-change", "unchanged"];
+var tip = ["deleted", "inserted", "change", "same", "same", "same"];
 
-window.onload =
-
-function (e) {
-  var tags = document.getElementsByTagName("A");
-  for (var i = 0; i < tags.length; i += 1) {
-    tags[i].onclick =
-
-    function (e) {
-      var t = getTarget(e);
-      var lid = t.id;
-      var tid = t.getAttribute('tid');
-      var container = getContainer(t);
-      highlight(container, lid, tid, 'ignore', 'ignore');
-    };
+function m(e) {
+  if (typeof e === 'string') {
+    this.appendChild(document.createTextNode(e));
+  } else if (typeof e === 'object') {
+    if (e.i) {
+      var n = document.createElement('a');
+      n.setAttribute('tid', e.i);
+      n.setAttribute('class', c[e.c]);
+      n.setAttribute('id', e.i + 1);
+      n.setAttribute('title', tip[e.c]);
+      n.innerHTML = e.s;
+      this.appendChild(n);
+      n.onclick = function (e) {
+        var t = getTarget(e);
+        var lid = t.id;
+        var tid = t.getAttribute('tid');
+        var container = getContainer(t);
+        highlight(container, lid, tid, 'ignore', 'ignore');
+      };
+    } else {
+      var s = document.createElement('span');
+      s.setAttribute('class', c[e.c]);
+      s.setAttribute('title', tip[e.c]);
+      s.innerHTML = e.s;
+      this.appendChild(s);
+    }
+  } else {
+    throw 'render data type err';
   }
+}
 
-  tags = document.getElementsByTagName("DIV");
-  for (i = 0; i < tags.length; i += 1) {
-    tags[i].onscroll =
-
-    function (e) {
-      instantMoveOtherWindow(getTarget(e));
-    };
-  }
+window.onload = function (e) {
+  var g = new Ajax.Request("/d.json", {
+    asynchronous: true,
+    method: 'get',
+    onComplete: function (resp) {
+      var o = JSON.parse(resp.responseText);
+      o.left.forEach(m,$('leftstart').parentNode);
+      o.right.forEach(m,$('rightstart').parentNode);
+      [$('left'), $('right')].forEach(function (e) {
+        e.onscroll = function (e) {
+          instantMoveOtherWindow(getTarget(e));
+        };
+      });
+    }
+  });
 };
