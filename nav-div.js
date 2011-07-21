@@ -1,4 +1,4 @@
-window.$=function(a){return document.getElementById(a)};
+window['$']=function(a){return document.getElementById(a)};
 
 /////////////////////// debug flag ////////////////////////
 var debug = false;
@@ -134,7 +134,9 @@ function matchWindow(linkId, targetId, n) {
     var blocked = scrollWithBlockCheck(targetContainer, distX, step);
     var rest = Math.floor(distY / step) - 1;
     if (!blocked) {
-      cTimeout = setTimeout("matchWindow(" + linkId + "," + targetId + "," + rest + ")", stepInterval);
+      cTimeout = setTimeout(function () {
+        return matchWindow(linkId, targetId, rest);
+      }, stepInterval);
     } else {
       clearTimeout(cTimeout);
       moving = false;
@@ -221,13 +223,13 @@ function m(e) {
   if (typeof e === 'string') {
     this.appendChild(document.createTextNode(e));
   } else if (typeof e === 'object') {
-    if (e.i) {
+    if (e['i']) {
       var n = document.createElement('a');
-      n.setAttribute('tid', e.i);
-      n.setAttribute('class', c[e.c]);
-      n.setAttribute('id', e.i + 1);
-      n.setAttribute('title', tip[e.c]);
-      n.innerHTML = e.s;
+      n.setAttribute('tid', e['i']);
+      n.setAttribute('class', c[e['c']]);
+      n.setAttribute('id', e['i'] + 1);
+      n.setAttribute('title', tip[e['c']]);
+      n.innerHTML = e['s'];
       this.appendChild(n);
       n.onclick = function (e) {
         var t = getTarget(e);
@@ -238,9 +240,9 @@ function m(e) {
       };
     } else {
       var s = document.createElement('span');
-      s.setAttribute('class', c[e.c]);
-      s.setAttribute('title', tip[e.c]);
-      s.innerHTML = e.s;
+      s.setAttribute('class', c[e['c']]);
+      s.setAttribute('title', tip[e['c']]);
+      s.innerHTML = e['s'];
       this.appendChild(s);
     }
   } else {
