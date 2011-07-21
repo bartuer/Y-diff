@@ -1,4 +1,3 @@
-include('lib.ajax.js');
 window.$=function(a){return document.getElementById(a)};
 
 /////////////////////// debug flag ////////////////////////
@@ -266,18 +265,12 @@ function m(e) {
 }
 
 window.onload = function (e) {
-  var g = new Ajax.Request("/d.json", {
-    asynchronous: true,
-    method: 'get',
-    onComplete: function (resp) {
-      var o = JSON.parse(resp.responseText);
-      o.left.forEach(m,$('leftstart').parentNode);
-      o.right.forEach(m,$('rightstart').parentNode);
-      [$('left'), $('right')].forEach(function (e) {
-        e.onscroll = function (e) {
-          instantMoveOtherWindow(getTarget(e));
-        };
-      });
-    }
+  var o = JSON.parse($('data').innerText);
+  o.left.forEach(m, $('leftstart').parentNode);
+  o.right.forEach(m, $('rightstart').parentNode);
+  [$('left'), $('right')].forEach(function (e) {
+    e.onscroll = function (e) {
+      instantMoveOtherWindow(getTarget(e));
+    };
   });
 };
