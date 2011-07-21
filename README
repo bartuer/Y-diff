@@ -1,0 +1,20 @@
+This is just faster demo of a AST based diff tool
+
+see original site:
+http://www.cs.indiana.edu/~yw21/demos/paredit20-paredit22.html
+
+Purpose of this project simply accelerate the render speed of above page.
+
+RANDOM WHY NOT: (for those who want to improve original project architecture)
+   - why not hook on github?
+     user can post a commit url, then get a fine diff page, that's
+     will be cool
+   - why not move parser to browser?
+     if parser can run on user's machine, there would be zero load on server.
+
+     see this:
+     https://github.com/mishoo/UglifyJS
+     and this
+     https://github.com/mishoo/cl-uglify-js
+
+
