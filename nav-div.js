@@ -42,15 +42,6 @@ function sign(x) {
   }
 }
 
-
-function log(msg) {
-  if (debug) {
-    console.log(msg);
-  }
-}
-
-
-
 function elementPosition(id) {
   obj = document.getElementById(id);
   var curleft = 0,
@@ -86,12 +77,9 @@ function scrollWithBlockCheck(container, distX, distY) {
 
   var actualX = container.scrollLeft - oldLeft;
   var actualY = container.scrollTop - oldTop;
-  log("distY=" + distY + ", actualY=" + actualY);
-  log("distX=" + distX + ", actualX=" + actualX);
 
   // extra leewaw here because Chrome scrolling is horribly inacurate
   if ((Math.abs(distX) > blockRange && actualX === 0) || Math.abs(distY) > blockRange && actualY === 0) {
-    log("blocked");
     container.style.backgroundColor = bodyBlockedColor;
     return true;
   } else {
@@ -128,7 +116,6 @@ function matchWindow(linkId, targetId, n) {
   var distX = linkContainer.scrollLeft - targetContainer.scrollLeft;
 
 
-  log("matching window... " + n + " distY=" + distY + " distX=" + distX);
 
   if (distY === 0 && distX === 0) {
     clearTimeout(cTimeout);
@@ -146,7 +133,6 @@ function matchWindow(linkId, targetId, n) {
     }
     var blocked = scrollWithBlockCheck(targetContainer, distX, step);
     var rest = Math.floor(distY / step) - 1;
-    log("blocked?" + blocked + ", rest steps=" + rest);
     if (!blocked) {
       cTimeout = setTimeout("matchWindow(" + linkId + "," + targetId + "," + rest + ")", stepInterval);
     } else {
@@ -207,8 +193,6 @@ function highlight(me, linkId, targetId, linkLineId, targetLineId) {
 
 
 function instantMoveOtherWindow(me) {
-  log("me=" + me.id + ", eventcount=" + eventCount[me.id]);
-  log("matchId1=" + matchId1 + ", matchId2=" + matchId2);
 
   me.style.backgroundColor = bgColor;
 
